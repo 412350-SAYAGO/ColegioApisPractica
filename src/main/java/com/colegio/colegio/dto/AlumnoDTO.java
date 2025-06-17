@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 
 public class AlumnoDTO {
@@ -15,6 +17,7 @@ public class AlumnoDTO {
     @Email(message = "Debe ser un Email valido")
     private String email;
 
-    @NotBlank(message = "El legajo es obligatorio")
     private Integer legajo;
+
+    List<Long> idMaterias;
 }

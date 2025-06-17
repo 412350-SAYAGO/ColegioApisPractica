@@ -16,8 +16,6 @@ public class AlumnoController {
 
     @Autowired
     private AlumnoServiceInterface alumnoServiceInterface;
-    @Autowired
-    private InternalResourceViewResolver internalResourceViewResolver;
 
     @GetMapping
     public List<AlumnoDTO> obtenerAlumnos(){

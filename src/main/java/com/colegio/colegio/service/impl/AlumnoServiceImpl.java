@@ -1,8 +1,10 @@
 package com.colegio.colegio.service.impl;
 
 import com.colegio.colegio.dao.AlumnoDAO;
+import com.colegio.colegio.dao.MateriaDAO;
 import com.colegio.colegio.dto.AlumnoDTO;
 import com.colegio.colegio.models.Alumno;
+import com.colegio.colegio.models.Materia;
 import com.colegio.colegio.repository.AlumnoRepository;
 import com.colegio.colegio.service.interf.AlumnoServiceInterface;
 import org.modelmapper.ModelMapper;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 
 @Service
 public class AlumnoServiceImpl implements AlumnoServiceInterface {
@@ -21,6 +24,8 @@ public class AlumnoServiceImpl implements AlumnoServiceInterface {
     @Autowired
     private AlumnoDAO alumnoDAO;
 
+    @Autowired
+    private MateriaDAO materiaDAO;
 
 
     @Override
@@ -28,7 +33,19 @@ public class AlumnoServiceImpl implements AlumnoServiceInterface {
         List<Alumno> alumnosEncontrados = alumnoDAO.findAll();
         List<AlumnoDTO> alumnosMapeados = new ArrayList<>();
         for (Alumno alumno: alumnosEncontrados){
-            alumnosMapeados.add(modelMapper.map(alumno, AlumnoDTO.class));
+            AlumnoDTO alumnoDto = new AlumnoDTO();
+            alumnoDto.setId(alumno.getId());
+            alumnoDto.setEmail(alumno.getEmail());
+            alumnoDto.setNombre(alumno.getNombre());
+            alumnoDto.setLegajo(alumno.getLegajo());
+            List<Long> idMaterias = new ArrayList<>();
+            if(alumno.getMarteriasCursadas() != null){
+                for(Materia materia : alumno.getMarteriasCursadas()){
+                    idMaterias.add(materia.getId());
+                }
+            }
+            alumnoDto.setIdMaterias(idMaterias);
+            alumnosMapeados.add(alumnoDto);
         }
         return alumnosMapeados;
     }
@@ -36,12 +53,37 @@ public class AlumnoServiceImpl implements AlumnoServiceInterface {
     @Override
     public AlumnoDTO obtenerAlumnoPorId(Long id) {
         Alumno alumnoEncontrado = alumnoDAO.findById(id).orElseThrow();
-        return modelMapper.map(alumnoEncontrado, AlumnoDTO.class);
+
+        AlumnoDTO alumnoMapeado =  new AlumnoDTO();
+        List<Long> idMaterias = new ArrayList<>();
+            for(Materia materia : alumnoEncontrado.getMarteriasCursadas()){
+                idMaterias.add(materia.getId());
+            }
+
+
+        alumnoMapeado.setId(id);
+        alumnoMapeado.setIdMaterias(idMaterias);
+        alumnoMapeado.setLegajo(alumnoEncontrado.getLegajo());
+        alumnoMapeado.setNombre(alumnoEncontrado.getNombre());
+        alumnoMapeado.setEmail(alumnoEncontrado.getEmail());
+
+        return alumnoMapeado;
     }
 
     @Override
     public AlumnoDTO guardarAlumno(AlumnoDTO alumnoDTO) {
-        Alumno alumnoNuevo = modelMapper.map(alumnoDTO, Alumno.class);
+        Alumno alumnoNuevo = new Alumno();
+
+            List<Materia> materias = new ArrayList<>();
+            for(Long idMateria : alumnoDTO.getIdMaterias()){
+                Materia materia = materiaDAO.findById(idMateria).orElseThrow();
+                materias.add(materia);
+            }
+            alumnoNuevo.setMarteriasCursadas(materias);
+
+        alumnoNuevo.setLegajo(alumnoDTO.getLegajo());
+        alumnoNuevo.setNombre(alumnoDTO.getNombre());
+        alumnoNuevo.setEmail(alumnoDTO.getEmail());
         return modelMapper.map(alumnoDAO.save(alumnoNuevo), AlumnoDTO.class);
     }
 
