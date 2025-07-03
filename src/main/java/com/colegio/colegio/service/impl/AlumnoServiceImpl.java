@@ -72,19 +72,18 @@ public class AlumnoServiceImpl implements AlumnoServiceInterface {
 
     @Override
     public AlumnoDTO guardarAlumno(AlumnoDTO alumnoDTO) {
-        Alumno alumnoNuevo = new Alumno();
+        Alumno alumnoNuevo = modelMapper.map(alumnoDTO, Alumno.class);
+       List<Materia> materias = new ArrayList<>();
+       for(Long idMateria : alumnoDTO.getIdMaterias()){
+           Materia materia = materiaDAO.findById(idMateria).orElseThrow();
+           materias.add(materia);
+       }
 
-            List<Materia> materias = new ArrayList<>();
-            for(Long idMateria : alumnoDTO.getIdMaterias()){
-                Materia materia = materiaDAO.findById(idMateria).orElseThrow();
-                materias.add(materia);
-            }
-            alumnoNuevo.setMarteriasCursadas(materias);
-
-        alumnoNuevo.setLegajo(alumnoDTO.getLegajo());
-        alumnoNuevo.setNombre(alumnoDTO.getNombre());
-        alumnoNuevo.setEmail(alumnoDTO.getEmail());
-        return modelMapper.map(alumnoDAO.save(alumnoNuevo), AlumnoDTO.class);
+       alumnoNuevo.setMarteriasCursadas(materias);
+       alumnoNuevo.setLegajo(alumnoDTO.getLegajo());
+       alumnoNuevo.setNombre(alumnoDTO.getNombre());
+       alumnoNuevo.setEmail(alumnoDTO.getEmail());
+       return modelMapper.map(alumnoDAO.save(alumnoNuevo), AlumnoDTO.class);
     }
 
     @Override

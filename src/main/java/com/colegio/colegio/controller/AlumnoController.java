@@ -43,7 +43,7 @@ public class AlumnoController {
     public AlumnoDTO actualizarAlumno(@Valid
                                       @RequestBody AlumnoDTO alumnoDTO,
                                       @PathVariable long id){
-        return alumnoServiceInterface.actualizarAlumno(id, alumnoDTO);
+        returgitn alumnoServiceInterface.actualizarAlumno(id, alumnoDTO);
     }
 
 }

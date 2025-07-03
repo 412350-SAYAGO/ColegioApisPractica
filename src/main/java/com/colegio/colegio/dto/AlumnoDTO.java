@@ -4,10 +4,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
 public class AlumnoDTO {
     private Long id;
     @NotBlank(message = "El Nombre es obligatorio")
@@ -19,5 +19,5 @@ public class AlumnoDTO {
 
     private Integer legajo;
 
-    List<Long> idMaterias;
+    List<Long> idMaterias = new ArrayList<>();
 }
