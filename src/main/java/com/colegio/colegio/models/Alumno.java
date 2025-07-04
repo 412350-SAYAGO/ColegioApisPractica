@@ -1,9 +1,8 @@
 package com.colegio.colegio.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Profesor {
+public class Alumno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +20,10 @@ public class Profesor {
 
     private String email;
 
-    private String titulo;
+    private Integer legajo;
 
-    @OneToMany
-    List<Materia> materiasDictadas;
-
+    @ManyToMany(mappedBy = "alumnos")
+            @JsonIgnore
+    List<Materia> marteriasCursadas;
 
 }

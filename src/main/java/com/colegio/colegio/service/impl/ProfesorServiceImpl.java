@@ -18,10 +18,10 @@ import java.util.Optional;
 public class ProfesorServiceImpl implements ProfesorServiceInterface {
 
     @Autowired
-    ProfesorDAO profesorDao;
+    private ProfesorDAO profesorDao;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
     @Autowired
     private ProfesorRepository profesorRepository;
 
